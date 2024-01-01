@@ -82,7 +82,10 @@ const load_sliders = (settings) => {
                 return index;
             if (index >= 0 && index >= slider_elements_length)
                 return index - Math.floor(index / slider_elements_length) * slider_elements_length;
-            return slider_elements_length - (Math.abs(index) - (Math.floor(Math.abs(index) / slider_elements_length)) * slider_elements_length);
+            if (slider_elements_length === 1)
+                return 0;
+            return (slider_elements_length - 1) -
+                (Math.abs(index) - (Math.abs(index) > slider_elements_length ? (Math.floor(Math.abs(index) / slider_elements_length) * slider_elements_length) : 0) - 1);
         };
         const get_slider_element = (index) => {
             return slider.slider_elements[get_slider_element_index(index)].cloneNode(true);
@@ -92,7 +95,7 @@ const load_sliders = (settings) => {
         for (let i = 0; i < copy_count; i++)
             slider.slider_container_element.appendChild(get_slider_element(i));
         slider.translate_x = -slider.child_element_width * copy_count;
-        slider.current_element_index = get_slider_element_index(ELEMENTS_COPY_COUNT);
+        slider.current_element_index = ELEMENTS_COPY_COUNT;
         update_slider_view(slider, 0);
     };
     const adjust_slider_on_resize = (slider) => {
@@ -118,6 +121,8 @@ const load_sliders = (settings) => {
         slider.current_mouse_x = client_x;
     };
     const slider_up_hook = (event, slider) => {
+        if (!slider.pressing)
+            return;
         const prepare_change_block = () => {
             if (slider.during_animation) {
                 requestAnimationFrame(prepare_change_block);

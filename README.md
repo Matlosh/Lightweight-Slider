@@ -33,5 +33,10 @@ the available options are:
 - `auto_slide_px` tells what's the border after which the slider should slide to the next or previous slider (in px)
 - `slider_speed` tells what's the speed of the slider (play with it in order to match your requirements) 
 
+## Images
+
+Here is the screenshot of the slider with a beautiful preview image made by me ;)
+![Slider's preview image](lightweight-slider-preview-image.png)
+
 ## State
 Slider probably won't receive many updates, only some patches are possible.

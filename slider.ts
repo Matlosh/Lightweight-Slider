@@ -118,7 +118,10 @@ const load_sliders = (settings: Settings) => {
         const get_slider_element_index = (index: number) => {
             if(index >= 0 && index < slider_elements_length) return index;
             if(index >= 0 && index >= slider_elements_length) return index - Math.floor(index / slider_elements_length) * slider_elements_length;
-            return slider_elements_length - (Math.abs(index) - (Math.floor(Math.abs(index) / slider_elements_length)) * slider_elements_length);
+            // Slider with one element is a special case - should always return 0
+            if(slider_elements_length === 1) return 0;
+            return (slider_elements_length - 1) -
+                (Math.abs(index) - (Math.abs(index) > slider_elements_length ? (Math.floor(Math.abs(index) / slider_elements_length) * slider_elements_length) : 0) - 1);
         };
 
         const get_slider_element = (index: number) => {
@@ -132,7 +135,7 @@ const load_sliders = (settings: Settings) => {
             slider.slider_container_element.appendChild(get_slider_element(i));
 
         slider.translate_x = -slider.child_element_width * copy_count;
-        slider.current_element_index = get_slider_element_index(ELEMENTS_COPY_COUNT);
+        slider.current_element_index = ELEMENTS_COPY_COUNT;
         update_slider_view(slider, 0);
     };
 
@@ -162,6 +165,8 @@ const load_sliders = (settings: Settings) => {
     };
 
     const slider_up_hook = (event: MouseEvent | TouchEvent, slider: Slider) => {
+        if(!slider.pressing) return;
+
         const prepare_change_block = () => {
             if(slider.during_animation) {
                 requestAnimationFrame(prepare_change_block);
